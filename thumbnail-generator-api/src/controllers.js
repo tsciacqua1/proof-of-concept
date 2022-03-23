@@ -1,27 +1,34 @@
 const sharp = require("sharp");
-const fs = require("fs");
-const path = require("path");
 const JSZip = require("jszip");
-const { map } = require("lodash");
-const uploadImage = require("./multer");
-const { uploadsDir } = require("./constants");
+const AWS = require("aws-sdk");
+const { v4: uuidv4 } = require("uuid");
+const multer = require("multer");
+const _ = require("lodash");
+const { uploadImage } = require("./multer");
+require("dotenv").config();
 
-const home = (req, res) => {
-  res.send(`<form action="/api/v1/upload" method="post" enctype="multipart/form-data">
-  <input type="file" name="image" accept="image/*" />
-  <input type="submit" value="upload" />
-</form>`);
-};
+const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_BUCKET_NAME } =
+  process.env;
+
+const zip = new JSZip();
+const s3 = new AWS.S3({
+  accessKeyId: AWS_ACCESS_KEY_ID,
+  secretAccessKey: AWS_SECRET_ACCESS_KEY,
+});
 
 const postImage = (req, res) => {
   try {
     uploadImage(req, res, async (err) => {
-      if (!req.file) {
+      if (err instanceof multer.MulterError) {
+        res.status(400).send({ error: err.message, message: "Max size 5MB" });
+      } else if (err) {
+        res.status(400).send({ error: true, message: err.error.message });
+      } else if (!req.file) {
         res
           .status(400)
           .send({ error: true, message: "Select a file to upload" });
       } else {
-        const folderName = req.file.filename.split(".")[0];
+        const id = uuidv4();
         const sizes = [
           {
             name: "large",
@@ -40,53 +47,45 @@ const postImage = (req, res) => {
           },
         ];
 
-        await fs.mkdir(`${uploadsDir}/${folderName}`, (err) => {
-          if (err) return console.error(err);
+        const files = await Promise.all(
+          _.map(sizes, (size) => {
+            return sharp(req.file.buffer)
+              .resize(size.w, size.h)
+              .png()
+              .toBuffer();
+          })
+        );
+
+        const urls = await Promise.all(
+          _.map(files, async (el, i) => {
+            let params = {
+              Bucket: AWS_BUCKET_NAME,
+              ACL: "public-read",
+              Key: `${id}-${sizes[i].name}.png`,
+              Body: el,
+            };
+            return await s3
+              .upload(params, (err) => {
+                if (err) console.log(err);
+              })
+              .promise();
+          })
+        );
+
+        res.send({
+          images: {
+            small: urls[2].Location,
+            medium: urls[1].Location,
+            large: urls[0].Location,
+          },
         });
-
-        map(sizes, (size) => {
-          sharp(req.file.path)
-            .resize(size.w, size.h)
-            .toFile(
-              `${uploadsDir}/${folderName}/thumbnail(${size.name})-${req.file.filename}`,
-              (err) => {
-                if (err) return res.send({ error: true, message: err.message });
-              }
-            );
-        });
-
-        const file = `${uploadsDir}/${folderName}.zip`;
-
-        if (err) res.status(400).send({ error: true, message: err.message });
-        //else res.json(req.file);
-        else res.redirect(`/api/v1/download/${folderName}`);
       }
     });
   } catch (error) {
-    console.error(error);
-  }
-};
-
-const downloadImages = async (req, res) => {
-  const { id } = req.params;
-  var zip = new JSZip();
-  try {
-    (async () => {
-      var files = await fs.promises.readdir(path.join(uploadsDir, id));
-      for (const file of files) {
-        zip.file(file);
-      }
-    })();
-    zip
-      .generateNodeStream({ type: "nodebuffer", streamFiles: true })
-      .pipe(fs.createWriteStream(`${uploadsDir}/${id}.zip`));
-  } catch (err) {
     res.send({ error: true, message: err.message });
   }
 };
 
 module.exports = {
-  home,
   postImage,
-  downloadImages,
 };
