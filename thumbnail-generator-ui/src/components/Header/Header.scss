@@ -1,0 +1,15 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid #a1a1a1;
+
+  &__menu {
+    ul {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+  }
+}

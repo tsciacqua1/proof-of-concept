@@ -1,5 +1,4 @@
 const sharp = require("sharp");
-const JSZip = require("jszip");
 const AWS = require("aws-sdk");
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
@@ -10,7 +9,6 @@ require("dotenv").config();
 const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_BUCKET_NAME } =
   process.env;
 
-const zip = new JSZip();
 const s3 = new AWS.S3({
   accessKeyId: AWS_ACCESS_KEY_ID,
   secretAccessKey: AWS_SECRET_ACCESS_KEY,

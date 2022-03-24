@@ -2,4 +2,21 @@
 
 * {
   font-family: Roboto;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+a,
+p,
+span {
+  color: #3d3d3d;
+  text-decoration: none;
 }
