@@ -9,7 +9,10 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-axios.defaults.baseURL = `${process.env.REACT_APP_BASE_URL}`;
+const { REACT_APP_BASE_URL, REACT_APP_PORT } = process.env;
+
+axios.defaults.baseURL =
+  `${REACT_APP_BASE_URL}` || `http://localhost:${REACT_APP_PORT}/api/v1`;
 
 ReactDOM.render(
   <React.StrictMode>
