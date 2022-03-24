@@ -1,8 +1,9 @@
 const { Router } = require("express");
-const { postImage } = require("./controllers");
+const { home, uploadImage } = require("./controllers");
 
 const router = Router();
 
-router.post("/upload", postImage);
+router.get("/", home);
+router.post("/upload", uploadImage);
 
 module.exports = router;

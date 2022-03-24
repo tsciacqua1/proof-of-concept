@@ -1,22 +1,25 @@
 const sharp = require("sharp");
 const AWS = require("aws-sdk");
 const { v4: uuidv4 } = require("uuid");
-const multer = require("multer");
 const _ = require("lodash");
-const { uploadImage } = require("./multer");
+const multer = require("multer");
+const upload = require("./multer");
 require("dotenv").config();
 
-const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_BUCKET_NAME } =
-  process.env;
+const s3 = new AWS.S3();
+const { AWS_BUCKET_NAME } = process.env;
 
-const s3 = new AWS.S3({
-  accessKeyId: AWS_ACCESS_KEY_ID,
-  secretAccessKey: AWS_SECRET_ACCESS_KEY,
-});
-
-const postImage = (req, res) => {
+const home = (req, res) => {
   try {
-    uploadImage(req, res, async (err) => {
+    res.send("Home");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const uploadImage = async (req, res) => {
+  try {
+    upload(req, res, async (err) => {
       if (err instanceof multer.MulterError) {
         res.status(400).send({ error: err.message, message: "Max size 5MB" });
       } else if (err) {
@@ -57,7 +60,7 @@ const postImage = (req, res) => {
         const urls = await Promise.all(
           _.map(files, async (el, i) => {
             let params = {
-              Bucket: AWS_BUCKET_NAME,
+              Bucket: `${AWS_BUCKET_NAME}/uploads`,
               ACL: "public-read",
               Key: `${id}-${sizes[i].name}.png`,
               Body: el,
@@ -85,5 +88,6 @@ const postImage = (req, res) => {
 };
 
 module.exports = {
-  postImage,
+  home,
+  uploadImage,
 };

@@ -1,23 +1,17 @@
 {
-  "name": "thumbnail-generator-api",
+  "name": "poc-api1",
   "version": "1.0.0",
-  "description": "Build a simple API that generates thumbnails from a source image",
-  "main": "index.js",
-  "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "",
   "dependencies": {
     "aws-sdk": "^2.1097.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
-    "express": "^4.17.3",
+    "express": "^4.17.1",
+    "helmet": "^5.0.2",
     "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
+    "serverless-http": "^2.7.0",
     "sharp": "^0.30.3",
     "uuid": "^8.3.2"
   }

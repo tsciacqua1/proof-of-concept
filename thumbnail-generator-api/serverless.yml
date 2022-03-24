@@ -1,0 +1,21 @@
+service: poc-api1
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: sa-east-1
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - s3:*
+          Resource:
+            - arn:aws:s3:::poc-api1-dev-serverlessdeploymentbucket-x2kvmmin1ppi/*
+
+functions:
+  api:
+    handler: src/handler.handler
+    events:
+      - httpApi: "*"
