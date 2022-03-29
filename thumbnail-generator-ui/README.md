@@ -5,7 +5,7 @@
 Steps:
 
 - Clone this repository.
-- Create .env file in root folder and add the following:
+- Create .env file in root folder and add the following:\
   REACT_APP_BASE_URL=https://guhzf5se49.execute-api.sa-east-1.amazonaws.com
 
 And finally:
