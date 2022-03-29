@@ -1,0 +1,11 @@
+.register {
+  .container {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+
+    #button {
+      margin-top: 10px;
+    }
+  }
+}

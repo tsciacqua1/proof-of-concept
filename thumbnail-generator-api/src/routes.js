@@ -1,9 +1,13 @@
-const { Router } = require("express");
-const { home, uploadImage } = require("./controllers");
+const router = require("express").Router();
+const passport = require("passport");
+const { uploadImage, login, register } = require("./controllers");
 
-const router = Router();
-
-router.get("/", home);
-router.post("/upload", uploadImage);
+router.post(
+  "/upload",
+  passport.authenticate("jwt", { session: false }),
+  uploadImage
+);
+router.post("/login", login);
+router.post("/register", register);
 
 module.exports = router;

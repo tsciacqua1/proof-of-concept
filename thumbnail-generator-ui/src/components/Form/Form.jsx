@@ -27,8 +27,10 @@ const Form = () => {
 
   const handleChange = (e) => {
     setShowList(false);
-    setImage(e.target.files[0]);
-    setPreviewImage(URL.createObjectURL(e.target.files[0]));
+    if (e.target.files[0]) {
+      setImage(e.target.files[0]);
+      setPreviewImage(URL.createObjectURL(e.target.files[0]));
+    }
   };
 
   return (
