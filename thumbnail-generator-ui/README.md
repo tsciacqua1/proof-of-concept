@@ -1,9 +1,24 @@
 # PoC: Thumbnail Generator UI
 
+## HOW TO USE
+
+Steps:
+
+- Clone this repository.
+- Create .env file in root folder and add the following:
+  REACT_APP_BASE_URL=https://guhzf5se49.execute-api.sa-east-1.amazonaws.com
+
+And finally:
+
+- Run 'npm install'.
+- Run 'npm start'.
+
 ## Goal
+
 Build a simple UI for a thumbnail generator.
 
 ## Requirements
+
 - The UI let's you upload files through AJAX
 - You should mock the required endpoints (or solve and integrate with: `thumbnail-generator-api`)
 - It should preview the image that is going to be processed
@@ -12,6 +27,7 @@ Build a simple UI for a thumbnail generator.
 ## Grading Guidelines
 
 ### MVP (40 points)
+
 - Every requirement is met
 - The solution runs on our enviroment
 - Tech Stack: **Angular v6** or **React v16**
@@ -21,6 +37,7 @@ Build a simple UI for a thumbnail generator.
 - It's responsive and works well with phones and tablets
 
 ### Nice moves (5 points each)
+
 - It leverages some design framework (Material UI / Ant / Blueprint)
 - It includes transitions, loaders, progress status
 - It includes drag-and-drop functionality + visual cues to help the user
@@ -29,7 +46,7 @@ Build a simple UI for a thumbnail generator.
 - Includes a simple login (recommended: Auth0)
 
 ### Wait, WHAT?! (10 points each)
+
 - It works also with the device camera
 - It include a croping area / resize helper
 - It uses Redux extensively
-

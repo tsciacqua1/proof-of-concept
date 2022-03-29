@@ -13,7 +13,11 @@ provider:
             - s3:*
           Resource:
             - arn:aws:s3:::poc-api1-dev-serverlessdeploymentbucket-x2kvmmin1ppi/*
-
+        - Effect: Allow
+          Action:
+            - dynamodb:*
+          Resource:
+            - arn:aws:dynamodb:sa-east-1:816925220115:table/Users
 functions:
   api:
     handler: src/app.app
